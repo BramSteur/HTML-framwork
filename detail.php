@@ -13,19 +13,28 @@
     include 'connect.php';
 
 
-    echo "dit komt er binnen" .  $_GET['project'];
+    //echo "dit komt er binnen" .  $_GET['project'];
+
+    if(isset($_GET['project']) && !empty($_GET['project'])) {
+        $project = $_GET['project'];
+    }else{
+        $project = 1;
+    }
 
     try {
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $stmt = $conn->prepare("SELECT id, project_name, descr_short FROM projecten WHERE id = ". $_GET['project']);
+        $stmt = $conn->prepare("SELECT id, name, language, discription_long, git FROM projects WHERE id = ". $project);
         $stmt->execute();
+
 
         // set the resulting array to associative
         $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
         foreach ($stmt->fetchAll() as $k => $v) {
             echo $v['id'] . ": ";
-            echo $v['project_name'];
-            echo " - " . $v['descr_short'];
+            echo $v['name'];
+            echo " - " . $v['language'];
+            echo " - " . $v['discription_long'];
+            echo " - " . $v['git'];
             echo "<br>";
         }
     } catch (PDOException $e) {
